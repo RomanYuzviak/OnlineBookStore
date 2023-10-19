@@ -28,7 +28,7 @@ public class OnlineBookStoreApplication {
             newBook.setDescription("Some description...");
             newBook.setPrice(BigDecimal.valueOf(99));
             newBook.setIsbn("09090994535");
-            bookService.save(newBook);
+            //bookService.save(newBook);
         };
     }
 
