@@ -1,5 +1,6 @@
 package com.example.onlinebookstore.repository.impl;
 
+import com.example.onlinebookstore.exception.EntityNotFoundException;
 import com.example.onlinebookstore.model.Book;
 import com.example.onlinebookstore.repository.BookRepository;
 import java.util.List;
@@ -32,7 +33,7 @@ public class BookRepositoryImpl implements BookRepository {
             if (transaction != null) {
                 transaction.rollback();
             }
-            throw new RuntimeException("Can not create the book: " + book, ex);
+            throw new EntityNotFoundException("Can not create the book: " + book, ex);
         } finally {
             if (session != null) {
                 session.close();
@@ -46,7 +47,7 @@ public class BookRepositoryImpl implements BookRepository {
         try (Session session = sessionFactory.openSession()) {
             return session.createQuery("FROM Book", Book.class).getResultList();
         } catch (Exception ex) {
-            throw new RuntimeException("Can not get all books from database", ex);
+            throw new EntityNotFoundException("Can not get all books from database", ex);
         }
     }
 
@@ -56,7 +57,8 @@ public class BookRepositoryImpl implements BookRepository {
             return Optional.ofNullable(
                     session.get(Book.class, id));
         } catch (Exception ex) {
-            throw new RuntimeException("Can not get book by id %d from database".formatted(id), ex);
+            throw new EntityNotFoundException("Can not get book by id %d from database"
+                    .formatted(id), ex);
         }
     }
 }
