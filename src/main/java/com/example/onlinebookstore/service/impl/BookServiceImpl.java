@@ -29,9 +29,13 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public BookDto get(Long id) {
-        return bookMapper.toDto(bookRepository.get(id).orElseThrow(() ->
+        return bookMapper.toDto(bookRepository.findById(id).orElseThrow(() ->
                 new RuntimeException("There is not book in db by id %d"
                 .formatted(id))));
+    }
 
+    @Override
+    public void delete(Long id) {
+        bookRepository.deleteById(id);
     }
 }
