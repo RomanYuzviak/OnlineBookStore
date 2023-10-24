@@ -3,6 +3,7 @@ package com.example.onlinebookstore.service.impl;
 import com.example.onlinebookstore.dto.BookDto;
 import com.example.onlinebookstore.dto.CreateBookRequestDto;
 import com.example.onlinebookstore.mapper.BookMapper;
+import com.example.onlinebookstore.model.Book;
 import com.example.onlinebookstore.repository.BookRepository;
 import com.example.onlinebookstore.service.BookService;
 import java.util.List;
@@ -37,5 +38,16 @@ public class BookServiceImpl implements BookService {
     @Override
     public void delete(Long id) {
         bookRepository.deleteById(id);
+    }
+
+    @Override
+    public BookDto update(Long id, CreateBookRequestDto bookRequestDto) {
+        if (!bookRepository.existsById(id)) {
+            throw new RuntimeException("There is not book in db by id %d"
+                    .formatted(id));
+        }
+        Book updatedBook = (bookMapper.toModel(bookRequestDto));
+        updatedBook.setId(id);
+        return bookMapper.toDto(bookRepository.save(updatedBook));
     }
 }
