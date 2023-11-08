@@ -7,9 +7,10 @@ import com.example.onlinebookstore.mapper.BookMapper;
 import com.example.onlinebookstore.model.Book;
 import com.example.onlinebookstore.repository.BookRepository;
 import com.example.onlinebookstore.service.BookService;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import java.util.List;
+
 
 @Service
 @RequiredArgsConstructor
@@ -34,6 +35,5 @@ public class BookServiceImpl implements BookService {
         Book book = bookRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Can't find book with id " + id));
         return bookMapper.toDto(book);
-
     }
 }

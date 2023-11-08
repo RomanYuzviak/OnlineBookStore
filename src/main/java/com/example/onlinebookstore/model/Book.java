@@ -10,6 +10,7 @@ import java.math.BigDecimal;
 import lombok.Data;
 
 @Entity
+@Table(name = "books")
 @Data
 @Table(name = "books")
 public class Book {
