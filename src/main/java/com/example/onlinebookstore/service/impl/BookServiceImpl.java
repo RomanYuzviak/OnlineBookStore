@@ -1,6 +1,7 @@
 package com.example.onlinebookstore.service.impl;
 
 import com.example.onlinebookstore.dto.book.BookDto;
+import com.example.onlinebookstore.dto.book.BookDtoWithoutCategoryIds;
 import com.example.onlinebookstore.dto.book.CreateBookRequestDto;
 import com.example.onlinebookstore.mapper.BookMapper;
 import com.example.onlinebookstore.model.Book;
@@ -50,5 +51,12 @@ public class BookServiceImpl implements BookService {
         Book updatedBook = (bookMapper.toModel(bookRequestDto));
         updatedBook.setId(id);
         return bookMapper.toDto(bookRepository.save(updatedBook));
+    }
+
+    @Override
+    public List<BookDtoWithoutCategoryIds> findBooksByCategoryId(Long id, Pageable pageable) {
+        return bookRepository.findAllByCategories_Id(id, pageable).stream()
+                .map(bookMapper::toDtoWithoutCategories)
+                .toList();
     }
 }
