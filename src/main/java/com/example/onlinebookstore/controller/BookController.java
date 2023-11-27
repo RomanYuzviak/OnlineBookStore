@@ -6,6 +6,7 @@ import com.example.onlinebookstore.service.BookService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
 import java.util.List;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -20,38 +21,36 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/books")
+@RequiredArgsConstructor
 public class BookController {
     private final BookService bookService;
-
-    @Autowired
-    public BookController(BookService bookService) {
-        this.bookService = bookService;
-    }
 
     @GetMapping
     public List<BookDto> getAll() {
         return bookService.findAll();
     }
 
+    @ResponseStatus(HttpStatus.OK)
     @GetMapping("/{id}")
-    public BookDto findById(@PathVariable @Positive Long id) {
+    public BookDto getById(@PathVariable @Positive Long id) {
         return bookService.getById(id);
     }
 
+    @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
-    public BookDto save(@RequestBody @Valid CreateBookRequestDto requestDto) {
+    public BookDto save(@RequestBody CreateBookRequestDto requestDto) {
         return bookService.save(requestDto);
     }
 
+    @ResponseStatus(HttpStatus.OK)
     @PutMapping("/{id}")
-    BookDto update(@PathVariable @Positive Long id,
-                   @RequestBody @Valid CreateBookRequestDto requestDto) {
+    BookDto update(@PathVariable Long id, @RequestBody CreateBookRequestDto requestDto) {
         return bookService.update(id, requestDto);
     }
 
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping("/{id}")
-    public void delete(@PathVariable @Positive Long id) {
+    public void delete(@PathVariable Long id) {
         bookService.delete(id);
     }
 }
