@@ -10,9 +10,4 @@ public class EntityNotFoundException extends RuntimeException {
         super(message, cause);
 
     }
-
-    public EntityNotFoundException(String message) {
-        super(message);
-    }
-
 }
