@@ -11,7 +11,7 @@ import org.mapstruct.MappingTarget;
 public interface BookMapper {
     BookDto toDto(Book book);
 
-    Book toBook(CreateBookRequestDto bookDto);
+    Book toModel(CreateBookRequestDto bookDto);
 
     void updateBook(CreateBookRequestDto dto, @MappingTarget Book book);
 }
