@@ -21,6 +21,5 @@ public record UserRegistrationRequestDto(
         String shippingAddress,
         @Length(min = 8) @NotNull
         String password,
-        String repeatedPassword
-) {
+        String repeatedPassword) {
 }
