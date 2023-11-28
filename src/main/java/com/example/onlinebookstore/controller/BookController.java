@@ -7,7 +7,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import java.util.List;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -21,18 +21,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-//swagger doc http://localhost:8080/swagger-ui/index.html#/
 @Tag(name = "Book CRUD API", description = "Endpoints to manage books")
 @RestController
 @RequestMapping(value = "/api/books")
+@RequiredArgsConstructor
 public class BookController {
     private final BookService bookService;
 
-    @Autowired
-    public BookController(BookService bookService) {
-        this.bookService = bookService;
-    }
-
+    @ResponseStatus(HttpStatus.OK)
     @GetMapping
     @PreAuthorize("hasRole('ROLE_USER')")
     @Operation(summary = "get all books")
@@ -40,13 +36,15 @@ public class BookController {
         return bookService.findAll(pageable);
     }
 
+    @ResponseStatus(HttpStatus.OK)
     @GetMapping("/{id}")
     @PreAuthorize("hasRole('ROLE_USER')")
     @Operation(summary = "get a book by id")
-    public BookDto findById(@PathVariable Long id) {
+    public BookDto getById(@PathVariable Long id) {
         return bookService.get(id);
     }
 
+    @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @Operation(summary = "create a new book")
@@ -54,6 +52,7 @@ public class BookController {
         return bookService.save(requestDto);
     }
 
+    @ResponseStatus(HttpStatus.OK)
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @Operation(summary = "update a book by id")
