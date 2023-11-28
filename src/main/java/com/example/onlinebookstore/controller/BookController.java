@@ -7,7 +7,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import java.util.List;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -24,32 +24,32 @@ import org.springframework.web.bind.annotation.RestController;
 @Tag(name = "Book CRUD API", description = "Endpoints to manage books")
 @RestController
 @RequestMapping(value = "/api/books")
+@RequiredArgsConstructor
 public class BookController {
     private final BookService bookService;
 
-    @Autowired
-    public BookController(BookService bookService) {
-        this.bookService = bookService;
-    }
-
+    @ResponseStatus(HttpStatus.OK)
     @GetMapping
     @Operation(summary = "get all books")
     public List<BookDto> getAll(Pageable pageable) {
         return bookService.findAll(pageable);
     }
 
+    @ResponseStatus(HttpStatus.OK)
     @GetMapping("/{id}")
     @Operation(summary = "get a book by id")
-    public BookDto findById(@PathVariable Long id) {
+    public BookDto getById(@PathVariable Long id) {
         return bookService.get(id);
     }
 
+    @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
     @Operation(summary = "create a new book")
     public BookDto save(@RequestBody @Valid CreateBookRequestDto requestDto) {
         return bookService.save(requestDto);
     }
 
+    @ResponseStatus(HttpStatus.OK)
     @PutMapping("/{id}")
     @Operation(summary = "update a book by id")
     BookDto update(@PathVariable Long id, @RequestBody @Valid CreateBookRequestDto requestDto) {
