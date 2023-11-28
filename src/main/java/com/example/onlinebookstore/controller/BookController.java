@@ -20,8 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-//swagger doc http://localhost:8080/swagger-ui/index.html#/
-@Tag(name = "Book CRUD API", description = "Endpoints to manage books")
+@Tag(name = "Bookstore API", description = "Endpoints to manage books")
 @RestController
 @RequestMapping(value = "/api/books")
 @RequiredArgsConstructor
