@@ -8,7 +8,6 @@ import org.springframework.beans.BeanWrapperImpl;
 public class FieldsMatchValidator implements ConstraintValidator<FieldMatch, Object> {
     private String field;
     private String repeatedField;
-
     private final BeanWrapperImpl beanWrapper = new BeanWrapperImpl();
 
     @Override
@@ -17,7 +16,6 @@ public class FieldsMatchValidator implements ConstraintValidator<FieldMatch, Obj
                 .getPropertyValue(field);
         Object repeatedFieldValue = new BeanWrapperImpl(value)
                 .getPropertyValue(repeatedField);
-
         return Objects.equals(fieldValue, repeatedFieldValue);
     }
 

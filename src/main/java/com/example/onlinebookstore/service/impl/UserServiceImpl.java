@@ -9,6 +9,7 @@ import com.example.onlinebookstore.model.User;
 import com.example.onlinebookstore.repository.RoleRepository;
 import com.example.onlinebookstore.repository.UserRepository;
 import com.example.onlinebookstore.service.UserService;
+import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -29,7 +30,7 @@ public class UserServiceImpl implements UserService {
         }
         User user = userMapper.toUser(request);
         user.setPassword(passwordEncoder.encode(request.password()));
-        user.getRoles().add(roleRepository.findByName(Role.RoleName.ROLE_USER));
+        user.setRoles(Set.of(roleRepository.findByName(Role.RoleName.ROLE_USER)));
         return userMapper.toDto(userRepository.save(user));
     }
 }

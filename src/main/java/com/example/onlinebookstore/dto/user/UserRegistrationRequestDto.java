@@ -2,6 +2,7 @@ package com.example.onlinebookstore.dto.user;
 
 import com.example.onlinebookstore.validation.FieldMatch;
 import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import org.hibernate.validator.constraints.Length;
@@ -11,7 +12,7 @@ import org.hibernate.validator.constraints.Length;
         repeatedField = "repeatedPassword"
 )
 public record UserRegistrationRequestDto(
-        @Email @NotNull
+        @Email @NotBlank
         String email,
         @Size(min = 2, max = 32) @NotNull
         String firstName,
