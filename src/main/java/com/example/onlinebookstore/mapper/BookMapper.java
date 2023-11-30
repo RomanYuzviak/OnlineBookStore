@@ -17,6 +17,8 @@ public interface BookMapper {
 
     Book toModel(CreateBookRequestDto bookDto);
 
+    void updateBook(CreateBookRequestDto dto, @MappingTarget Book book);
+
     BookDtoWithoutCategoryIds toDtoWithoutCategories(Book book);
 
     @AfterMapping

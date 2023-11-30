@@ -8,6 +8,5 @@ public record UserLoginRequestDto(
         @Email(regexp = "^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\\.[a-zA-Z0-9-.]+$")
         String email,
         @NotBlank @Length(min = 8)
-        String password
-) {
+        String password) {
 }
