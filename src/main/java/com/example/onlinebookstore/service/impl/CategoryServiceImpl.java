@@ -2,6 +2,7 @@ package com.example.onlinebookstore.service.impl;
 
 import com.example.onlinebookstore.dto.category.CategoryDto;
 import com.example.onlinebookstore.dto.category.CreateCategoryRequestDto;
+import com.example.onlinebookstore.exception.EntityNotFoundException;
 import com.example.onlinebookstore.mapper.CategoryMapper;
 import com.example.onlinebookstore.model.Category;
 import com.example.onlinebookstore.repository.CategoryRepository;
@@ -20,7 +21,7 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public CategoryDto getById(Long id) {
         return categoryMapper.toDto(categoryRepository.findById(id).orElseThrow(() ->
-                new RuntimeException("There is not any category in db by id %d"
+                new EntityNotFoundException("There is not any category in db by id %d"
                         .formatted(id))));
     }
 
@@ -41,7 +42,7 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public CategoryDto update(Long id, CreateCategoryRequestDto categoryRequestDto) {
         if (!categoryRepository.existsById(id)) {
-            throw new RuntimeException("There is not book in db by id %d"
+            throw new EntityNotFoundException("There is not book in db by id %d"
                     .formatted(id));
         }
         Category updatedCategory = (categoryMapper.toCategory(categoryRequestDto));
