@@ -10,7 +10,7 @@ public interface BookService {
 
     List<BookDto> findAll(Pageable pageable);
 
-    BookDto get(Long id);
+    BookDto getById(Long id);
 
     void delete(Long id);
 
