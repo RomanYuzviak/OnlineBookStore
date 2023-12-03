@@ -26,17 +26,17 @@ databaseChangeLog:
                     nullable: false
               - column:
                   name: first_name
-                  type: varchar(255)
+                  type: varchar(32)
                   constraints:
                     nullable: false
               - column:
                   name: last_name
-                  type: varchar(255)
+                  type: varchar(32)
                   constraints:
                     nullable: false
               - column:
                   name: shipping_address
-                  type: varchar(255)
+                  type: varchar(128)
                   constraints:
                     nullable: false
               - column:

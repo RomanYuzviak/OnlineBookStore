@@ -2,11 +2,13 @@ package com.example.onlinebookstore.validation;
 
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
+import java.util.Objects;
 import org.springframework.beans.BeanWrapperImpl;
 
 public class FieldsMatchValidator implements ConstraintValidator<FieldMatch, Object> {
     private String field;
     private String repeatedField;
+    private final BeanWrapperImpl beanWrapper = new BeanWrapperImpl();
 
     @Override
     public boolean isValid(Object value, ConstraintValidatorContext context) {
@@ -14,12 +16,7 @@ public class FieldsMatchValidator implements ConstraintValidator<FieldMatch, Obj
                 .getPropertyValue(field);
         Object repeatedFieldValue = new BeanWrapperImpl(value)
                 .getPropertyValue(repeatedField);
-
-        if (fieldValue != null) {
-            return fieldValue.equals(repeatedFieldValue);
-        } else {
-            return repeatedFieldValue == null;
-        }
+        return Objects.equals(fieldValue, repeatedFieldValue);
     }
 
     @Override
