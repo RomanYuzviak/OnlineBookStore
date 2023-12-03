@@ -5,6 +5,6 @@ import java.util.Set;
 public record ShoppingCartDto(
         Long id,
         Long userId,
-        Set<CartItemResponseDto> cartItems
+        Set<CartItemDto> cartItems
 ) {
 }
