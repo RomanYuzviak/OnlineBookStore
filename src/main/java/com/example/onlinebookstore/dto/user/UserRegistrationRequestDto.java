@@ -3,7 +3,6 @@ package com.example.onlinebookstore.dto.user;
 import com.example.onlinebookstore.validation.FieldMatch;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import org.hibernate.validator.constraints.Length;
 
@@ -14,13 +13,14 @@ import org.hibernate.validator.constraints.Length;
 public record UserRegistrationRequestDto(
         @Email @NotBlank
         String email,
-        @Size(min = 2, max = 32) @NotNull
+        @Size(min = 2, max = 32) @NotBlank
         String firstName,
-        @Size(min = 2, max = 32) @NotNull
+        @Size(min = 2, max = 32) @NotBlank
         String lastName,
-        @Size(max = 128) @NotNull
+        @Size(max = 128) @NotBlank
         String shippingAddress,
-        @Length(min = 8) @NotNull
+        @Length(min = 8) @NotBlank
         String password,
+        @Length(min = 8) @NotBlank
         String repeatedPassword) {
 }
