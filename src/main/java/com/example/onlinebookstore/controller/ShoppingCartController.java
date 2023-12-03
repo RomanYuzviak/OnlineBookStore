@@ -50,6 +50,7 @@ public class ShoppingCartController {
             @RequestBody @Valid CartItemRequestDto cartItemRequestDto, Principal principal) {
         return shoppingCartService.addCartItem(getUserId(principal), cartItemRequestDto);
     }
+
     @ResponseStatus(HttpStatus.ACCEPTED)
     @Operation(summary = "Update cart item quantity")
     @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
@@ -66,6 +67,7 @@ public class ShoppingCartController {
     public void delete(@PathVariable @Positive Long id) {
         shoppingCartService.deleteCartItem(id);
     }
+
     private Long getUserId(Principal principal) {
         User user = userRepository.findByEmail(principal.getName())
                 .orElseThrow(() -> new EntityNotFoundException("User is not found"));
