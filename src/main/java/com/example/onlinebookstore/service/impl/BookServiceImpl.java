@@ -7,6 +7,7 @@ import com.example.onlinebookstore.exception.EntityNotFoundException;
 import com.example.onlinebookstore.mapper.BookMapper;
 import com.example.onlinebookstore.model.Book;
 import com.example.onlinebookstore.repository.BookRepository;
+import com.example.onlinebookstore.repository.CategoryRepository;
 import com.example.onlinebookstore.service.BookService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -18,10 +19,12 @@ import org.springframework.stereotype.Service;
 public class BookServiceImpl implements BookService {
     private final BookRepository bookRepository;
     private final BookMapper bookMapper;
+    private final CategoryRepository categoryRepository;
 
     @Override
     public BookDto save(CreateBookRequestDto bookRequestDto) {
-        return bookMapper.toDto(bookRepository.save(bookMapper.toModel(bookRequestDto)));
+        return bookMapper.toDto(bookRepository.save(bookMapper
+                .toModel(bookRequestDto, categoryRepository)));
     }
 
     @Override
@@ -51,7 +54,7 @@ public class BookServiceImpl implements BookService {
         Book existedBook = bookRepository.findById(id).orElseThrow(() ->
                 new EntityNotFoundException("There is not book in db by id %d"
                         .formatted(id)));
-        bookMapper.updateBook(bookRequestDto, existedBook);
+        bookMapper.updateBook(existedBook, bookRequestDto, categoryRepository);
         return bookMapper.toDto(bookRepository.save(existedBook));
     }
 
