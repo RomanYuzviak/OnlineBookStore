@@ -16,7 +16,7 @@ import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 @Entity
-@Table(name = "shopping_cart")
+@Table(name = "shopping_carts")
 @Data
 public class ShoppingCart {
     @Id
