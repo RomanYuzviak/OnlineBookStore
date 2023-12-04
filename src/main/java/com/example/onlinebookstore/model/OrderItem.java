@@ -7,6 +7,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import java.math.BigDecimal;
 import lombok.Data;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
@@ -27,7 +28,7 @@ public class OrderItem {
     @Column(nullable = false)
     private Integer quantity;
     @Column(nullable = false)
-    private Long price;
+    private BigDecimal price;
     @Column(nullable = false)
     private boolean isDeleted = false;
 }
