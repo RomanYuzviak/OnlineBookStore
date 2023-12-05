@@ -16,8 +16,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
-import org.apache.commons.lang3.builder.ToStringExclude;
+import lombok.ToString;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
@@ -50,10 +49,9 @@ public class Order {
     @Column(nullable = false)
     private boolean isDeleted = false;
 
-    @ToStringExclude
-    @EqualsAndHashCode.Exclude
-    @OneToMany(cascade = CascadeType.PERSIST, mappedBy = "order",
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "order",
             fetch = FetchType.LAZY)
+    @ToString.Exclude
     private List<OrderItem> orderItems;
 
     public enum Status {
