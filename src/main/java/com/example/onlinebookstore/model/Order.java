@@ -5,6 +5,7 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -15,6 +16,8 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import org.apache.commons.lang3.builder.ToStringExclude;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
@@ -33,7 +36,7 @@ public class Order {
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
-    private STATUS status;
+    private Status status;
 
     @Column(nullable = false)
     private BigDecimal total;
@@ -47,10 +50,13 @@ public class Order {
     @Column(nullable = false)
     private boolean isDeleted = false;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "order")
+    @ToStringExclude
+    @EqualsAndHashCode.Exclude
+    @OneToMany(cascade = CascadeType.PERSIST, mappedBy = "order",
+            fetch = FetchType.LAZY)
     private List<OrderItem> orderItems;
 
-    public enum STATUS {
+    public enum Status {
         UNPAID,
         PENDING,
         DELIVERED,

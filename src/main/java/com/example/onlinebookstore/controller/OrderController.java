@@ -49,7 +49,8 @@ public class OrderController {
     @ResponseStatus(HttpStatus.CREATED)
     @PreAuthorize("hasRole('USER')")
     @Operation(summary = "create a new order for the user")
-    public OrderDto createOrder(@RequestBody @Valid OrderRequestDto requestDto, Principal principal) {
+    public OrderDto createOrder(@RequestBody @Valid OrderRequestDto requestDto,
+                                Principal principal) {
         return orderService.save(requestDto, getUserId(principal));
     }
 
@@ -57,9 +58,9 @@ public class OrderController {
     @ResponseStatus(HttpStatus.ACCEPTED)
     @PreAuthorize("hasRole('ADMIN')")
     @Operation(summary = "update an order")
-    public OrderDto patchOrder(@PathVariable @Positive Long orderId,
+    public OrderDto patchOrder(@PathVariable @Positive Long id,
                                @RequestBody @Valid OrderUpdateDto updateDto) {
-        return orderService.save(updateDto, orderId);
+        return orderService.save(updateDto, id);
     }
 
     private Long getUserId(Principal principal) {

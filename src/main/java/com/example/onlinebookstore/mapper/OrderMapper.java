@@ -1,20 +1,22 @@
 package com.example.onlinebookstore.mapper;
 
 import com.example.onlinebookstore.config.MapperConfig;
-import com.example.onlinebookstore.dto.category.CategoryDto;
-import com.example.onlinebookstore.dto.category.CreateCategoryRequestDto;
 import com.example.onlinebookstore.dto.order.OrderDto;
 import com.example.onlinebookstore.dto.order.OrderRequestDto;
 import com.example.onlinebookstore.dto.order.OrderUpdateDto;
-import com.example.onlinebookstore.model.Category;
 import com.example.onlinebookstore.model.Order;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.MappingTarget;
 
-@Mapper(config = MapperConfig.class)
+@Mapper(config = MapperConfig.class,
+        uses = OrderItemMapper.class)
 public interface OrderMapper {
+
+    @Mapping(target = "userId", source = "user.id")
     OrderDto toDto(Order order);
 
-    Order toOrder(OrderRequestDto requestDtoquestDto);
+    Order toOrder(OrderRequestDto requestDto);
 
-    Order toOrder(OrderUpdateDto updateDto);
+    void updateOrder(OrderUpdateDto dto, @MappingTarget Order order);
 }
