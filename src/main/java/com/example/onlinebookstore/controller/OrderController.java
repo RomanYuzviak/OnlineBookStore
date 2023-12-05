@@ -1,6 +1,7 @@
 package com.example.onlinebookstore.controller;
 
 import com.example.onlinebookstore.dto.order.OrderDto;
+import com.example.onlinebookstore.dto.order.OrderItemDto;
 import com.example.onlinebookstore.dto.order.OrderRequestDto;
 import com.example.onlinebookstore.dto.order.OrderUpdateDto;
 import com.example.onlinebookstore.exception.EntityNotFoundException;
@@ -51,7 +52,7 @@ public class OrderController {
     @Operation(summary = "create a new order for the user")
     public OrderDto createOrder(@RequestBody @Valid OrderRequestDto requestDto,
                                 Principal principal) {
-        return orderService.save(requestDto, getUserId(principal));
+        return orderService.update(requestDto, getUserId(principal));
     }
 
     @PatchMapping("/{id}")
@@ -60,7 +61,23 @@ public class OrderController {
     @Operation(summary = "update an order")
     public OrderDto patchOrder(@PathVariable @Positive Long id,
                                @RequestBody @Valid OrderUpdateDto updateDto) {
-        return orderService.save(updateDto, id);
+        return orderService.update(updateDto, id);
+    }
+
+    @GetMapping("{orderId}/items")
+    @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasRole('USER')")
+    @Operation(summary = "get all items for the order")
+    public List<OrderItemDto> getAllItems(@PathVariable @Positive Long orderId, Pageable pageable) {
+        return orderService.findAllOrderItemsByOrderId(pageable, orderId);
+    }
+
+    @GetMapping("{orderId}/items/{itemId}")
+    @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasRole('USER')")
+    @Operation(summary = "get order item by id")
+    public OrderItemDto getItemById(@PathVariable @Positive Long itemId) {
+        return orderService.findOrderItemById(itemId);
     }
 
     private Long getUserId(Principal principal) {

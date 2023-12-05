@@ -1,6 +1,7 @@
 package com.example.onlinebookstore.service.impl;
 
 import com.example.onlinebookstore.dto.order.OrderDto;
+import com.example.onlinebookstore.dto.order.OrderItemDto;
 import com.example.onlinebookstore.dto.order.OrderRequestDto;
 import com.example.onlinebookstore.dto.order.OrderUpdateDto;
 import com.example.onlinebookstore.exception.EntityNotFoundException;
@@ -43,7 +44,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     @Transactional
-    public OrderDto save(OrderRequestDto requestDto, Long userId) {
+    public OrderDto update(OrderRequestDto requestDto, Long userId) {
         Order newOrder = orderMapper.toOrder(requestDto);
         newOrder.setUser(userRepository.findById(userId)
                 .orElseThrow(() -> new EntityNotFoundException("User is not found")));
@@ -75,7 +76,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public OrderDto save(OrderUpdateDto updateDto, Long orderId) {
+    public OrderDto update(OrderUpdateDto updateDto, Long orderId) {
 
         Order currentOrder = orderRepository.findById(orderId)
                 .orElseThrow(() -> new EntityNotFoundException("Order is not found"));
@@ -83,6 +84,22 @@ public class OrderServiceImpl implements OrderService {
 
         return orderMapper.toDto(
                 orderRepository.save(currentOrder)
+        );
+    }
+
+    @Override
+    public List<OrderItemDto> findAllOrderItemsByOrderId(Pageable pageable, Long orderId) {
+        return orderItemRepository.findAllByOrderId(pageable, orderId)
+                .stream()
+                .map(orderItemMapper::toDto)
+                .toList();
+    }
+
+    @Override
+    public OrderItemDto findOrderItemById(Long itemId) {
+        return orderItemMapper.toDto(
+                orderItemRepository.findById(itemId)
+                        .orElseThrow(() -> new EntityNotFoundException("Order item is not found"))
         );
     }
 }

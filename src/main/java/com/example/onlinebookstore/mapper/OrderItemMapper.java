@@ -14,5 +14,5 @@ public interface OrderItemMapper {
     OrderItem toOrderItem(CartItem cartItem);
 
     @Mapping(target = "bookId", source = "book.id")
-    OrderItemDto toCartItemDto(OrderItem orderItem);
+    OrderItemDto toDto(OrderItem orderItem);
 }
