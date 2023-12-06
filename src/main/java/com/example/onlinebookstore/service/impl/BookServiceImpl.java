@@ -10,6 +10,8 @@ import com.example.onlinebookstore.repository.BookRepository;
 import com.example.onlinebookstore.repository.CategoryRepository;
 import com.example.onlinebookstore.service.BookService;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -23,8 +25,8 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public BookDto save(CreateBookRequestDto bookRequestDto) {
-        return bookMapper.toDto(bookRepository.save(bookMapper
-                .toModel(bookRequestDto, categoryRepository)));
+        Book newBook = setCategories(bookRequestDto);
+        return bookMapper.toDto(bookRepository.save(newBook));
     }
 
     @Override
@@ -54,7 +56,8 @@ public class BookServiceImpl implements BookService {
         Book existedBook = bookRepository.findById(id).orElseThrow(() ->
                 new EntityNotFoundException("There is not book in db by id %d"
                         .formatted(id)));
-        bookMapper.updateBook(existedBook, bookRequestDto, categoryRepository);
+        bookMapper.updateBook(existedBook, bookRequestDto);
+        existedBook = setCategories(bookRequestDto);
         return bookMapper.toDto(bookRepository.save(existedBook));
     }
 
@@ -63,5 +66,15 @@ public class BookServiceImpl implements BookService {
         return bookRepository.findAllByCategories_Id(id, pageable).stream()
                 .map(bookMapper::toDtoWithoutCategories)
                 .toList();
+    }
+
+    private Book setCategories(CreateBookRequestDto bookRequestDto) {
+        Book book = bookMapper.toModel(bookRequestDto);
+        book.setCategories(
+                bookRequestDto.categoryIdSet().stream()
+                        .map(categoryRepository::findById)
+                        .flatMap(Optional::stream)
+                        .collect(Collectors.toSet()));
+        return book;
     }
 }
