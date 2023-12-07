@@ -1,13 +1,17 @@
 package com.example.onlinebookstore.service.impl;
 
 import com.example.onlinebookstore.dto.book.BookDto;
+import com.example.onlinebookstore.dto.book.BookDtoWithoutCategoryIds;
 import com.example.onlinebookstore.dto.book.CreateBookRequestDto;
 import com.example.onlinebookstore.exception.EntityNotFoundException;
 import com.example.onlinebookstore.mapper.BookMapper;
 import com.example.onlinebookstore.model.Book;
 import com.example.onlinebookstore.repository.BookRepository;
+import com.example.onlinebookstore.repository.CategoryRepository;
 import com.example.onlinebookstore.service.BookService;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -17,10 +21,12 @@ import org.springframework.stereotype.Service;
 public class BookServiceImpl implements BookService {
     private final BookRepository bookRepository;
     private final BookMapper bookMapper;
+    private final CategoryRepository categoryRepository;
 
     @Override
     public BookDto save(CreateBookRequestDto bookRequestDto) {
-        return bookMapper.toDto(bookRepository.save(bookMapper.toModel(bookRequestDto)));
+        Book newBook = setCategories(bookRequestDto);
+        return bookMapper.toDto(bookRepository.save(newBook));
     }
 
     @Override
@@ -50,7 +56,25 @@ public class BookServiceImpl implements BookService {
         Book existedBook = bookRepository.findById(id).orElseThrow(() ->
                 new EntityNotFoundException("There is not book in db by id %d"
                         .formatted(id)));
-        bookMapper.updateBook(bookRequestDto, existedBook);
+        bookMapper.updateBook(existedBook, bookRequestDto);
+        existedBook = setCategories(bookRequestDto);
         return bookMapper.toDto(bookRepository.save(existedBook));
+    }
+
+    @Override
+    public List<BookDtoWithoutCategoryIds> findBooksByCategoryId(Long id, Pageable pageable) {
+        return bookRepository.findAllByCategories_Id(id, pageable).stream()
+                .map(bookMapper::toDtoWithoutCategories)
+                .toList();
+    }
+
+    private Book setCategories(CreateBookRequestDto bookRequestDto) {
+        Book book = bookMapper.toModel(bookRequestDto);
+        book.setCategories(
+                bookRequestDto.categoryIdSet().stream()
+                        .map(categoryRepository::findById)
+                        .flatMap(Optional::stream)
+                        .collect(Collectors.toSet()));
+        return book;
     }
 }
