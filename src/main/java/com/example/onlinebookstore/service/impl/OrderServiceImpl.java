@@ -3,7 +3,7 @@ package com.example.onlinebookstore.service.impl;
 import com.example.onlinebookstore.dto.order.OrderDto;
 import com.example.onlinebookstore.dto.order.OrderItemDto;
 import com.example.onlinebookstore.dto.order.OrderRequestDto;
-import com.example.onlinebookstore.dto.order.OrderUpdateDto;
+import com.example.onlinebookstore.dto.order.OrderUpdateRequestDto;
 import com.example.onlinebookstore.exception.EntityNotFoundException;
 import com.example.onlinebookstore.mapper.OrderItemMapper;
 import com.example.onlinebookstore.mapper.OrderMapper;
@@ -44,7 +44,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     @Transactional
-    public OrderDto update(OrderRequestDto requestDto, Long userId) {
+    public OrderDto create(OrderRequestDto requestDto, Long userId) {
         Order newOrder = orderMapper.toOrder(requestDto);
         newOrder.setUser(userRepository.findById(userId)
                 .orElseThrow(() -> new EntityNotFoundException("User is not found")));
@@ -61,7 +61,7 @@ public class OrderServiceImpl implements OrderService {
                                             .getPrice()
                             );
                             return oi;
-                            }
+                }
                 )
                 .toList();
         newOrder.setTotal(orderItems.stream()
@@ -75,16 +75,12 @@ public class OrderServiceImpl implements OrderService {
         );
     }
 
-    @Override
-    public OrderDto update(OrderUpdateDto updateDto, Long orderId) {
-
+    public OrderDto update(OrderUpdateRequestDto updateDto, Long orderId) {
         Order currentOrder = orderRepository.findById(orderId)
                 .orElseThrow(() -> new EntityNotFoundException("Order is not found"));
         orderMapper.updateOrder(updateDto, currentOrder);
 
-        return orderMapper.toDto(
-                orderRepository.save(currentOrder)
-        );
+        return orderMapper.toDto(orderRepository.save(currentOrder));
     }
 
     @Override

@@ -3,7 +3,7 @@ package com.example.onlinebookstore.controller;
 import com.example.onlinebookstore.dto.order.OrderDto;
 import com.example.onlinebookstore.dto.order.OrderItemDto;
 import com.example.onlinebookstore.dto.order.OrderRequestDto;
-import com.example.onlinebookstore.dto.order.OrderUpdateDto;
+import com.example.onlinebookstore.dto.order.OrderUpdateRequestDto;
 import com.example.onlinebookstore.exception.EntityNotFoundException;
 import com.example.onlinebookstore.model.User;
 import com.example.onlinebookstore.repository.UserRepository;
@@ -15,7 +15,9 @@ import jakarta.validation.constraints.Positive;
 import java.security.Principal;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
@@ -42,7 +44,6 @@ public class OrderController {
     @PreAuthorize("hasRole('USER')")
     @Operation(summary = "get all orders for the user")
     public List<OrderDto> getAll(Pageable pageable, Principal principal) {
-
         return orderService.findAll(pageable, getUserId(principal));
     }
 
@@ -52,7 +53,7 @@ public class OrderController {
     @Operation(summary = "create a new order for the user")
     public OrderDto createOrder(@RequestBody @Valid OrderRequestDto requestDto,
                                 Principal principal) {
-        return orderService.update(requestDto, getUserId(principal));
+        return orderService.create(requestDto, getUserId(principal));
     }
 
     @PatchMapping("/{id}")
@@ -60,7 +61,7 @@ public class OrderController {
     @PreAuthorize("hasRole('ADMIN')")
     @Operation(summary = "update an order")
     public OrderDto patchOrder(@PathVariable @Positive Long id,
-                               @RequestBody @Valid OrderUpdateDto updateDto) {
+                               @RequestBody @Valid OrderUpdateRequestDto updateDto) {
         return orderService.update(updateDto, id);
     }
 
@@ -68,7 +69,8 @@ public class OrderController {
     @ResponseStatus(HttpStatus.OK)
     @PreAuthorize("hasRole('USER')")
     @Operation(summary = "get all items for the order")
-    public List<OrderItemDto> getAllItems(@PathVariable @Positive Long orderId, Pageable pageable) {
+    public List<OrderItemDto> getAllItems(@PathVariable @Positive Long orderId,
+                                          @ParameterObject @PageableDefault Pageable pageable) {
         return orderService.findAllOrderItemsByOrderId(pageable, orderId);
     }
 
