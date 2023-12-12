@@ -12,7 +12,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface BookRepository extends JpaRepository<Book, Long>, JpaSpecificationExecutor<Book> {
-
     @EntityGraph(attributePaths = "categories")
     Optional<Book> findById(Long id);
 

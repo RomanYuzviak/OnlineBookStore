@@ -70,8 +70,7 @@ public class OrderServiceImpl implements OrderService {
         );
         orderItems.forEach(oi -> oi.setOrder(newOrder));
         newOrder.setOrderItems(orderItems);
-        return orderMapper.toDto(
-                orderRepository.save(newOrder)
+        return orderMapper.toDto(orderRepository.save(newOrder)
         );
     }
 
@@ -79,7 +78,6 @@ public class OrderServiceImpl implements OrderService {
         Order currentOrder = orderRepository.findById(orderId)
                 .orElseThrow(() -> new EntityNotFoundException("Order is not found"));
         orderMapper.updateOrder(updateDto, currentOrder);
-
         return orderMapper.toDto(orderRepository.save(currentOrder));
     }
 
