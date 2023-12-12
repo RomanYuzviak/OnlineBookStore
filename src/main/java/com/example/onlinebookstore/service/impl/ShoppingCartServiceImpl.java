@@ -28,17 +28,17 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
 
     @Transactional
     @Override
-    public ShoppingCartDto getShoppingCart(Long userId) {
-        ShoppingCart shoppingCart = getOrCreateShoppingCart(userId);
+    public ShoppingCartDto getShoppingCart(User user) {
+        ShoppingCart shoppingCart = getOrCreateShoppingCart(user);
         return shoppingCartMapper.toShoppingCartDto(shoppingCart);
     }
 
     @Transactional
     @Override
-    public ShoppingCartDto addCartItem(Long userId, CartItemRequestDto cartItemRequestDto) {
+    public ShoppingCartDto addCartItem(User user, CartItemRequestDto cartItemRequestDto) {
         Book book = bookRepository.findById(cartItemRequestDto.bookId()).orElseThrow(
                 () -> new EntityNotFoundException("The book is not found"));
-        ShoppingCart shoppingCart = getOrCreateShoppingCart(userId);
+        ShoppingCart shoppingCart = getOrCreateShoppingCart(user);
         CartItem cartItem = new CartItem();
         cartItem.setBook(book);
         cartItem.setQuantity(cartItemRequestDto.quantity());
@@ -63,16 +63,9 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
         cartItemRepository.deleteById(id);
     }
 
-    private ShoppingCart getOrCreateShoppingCart(Long userId) {
-        return shoppingCartRepository.findById(userId)
-                .orElseGet(() -> {
-                    User user = userRepository.findById(userId)
-                            .orElseThrow(() ->
-                                    new EntityNotFoundException("User with given id if not found"));
-
-                    ShoppingCart newShoppingCart = new ShoppingCart();
-                    newShoppingCart.setUser(userRepository.getReferenceById(user.getId()));
-                    return shoppingCartRepository.save(newShoppingCart);
-                });
+    private ShoppingCart getOrCreateShoppingCart(User user) {
+        ShoppingCart newShoppingCart = new ShoppingCart();
+        newShoppingCart.setUser(user);
+        return shoppingCartRepository.save(newShoppingCart);
     }
 }
