@@ -21,7 +21,7 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public CategoryDto getById(Long id) {
         return categoryMapper.toDto(categoryRepository.findById(id).orElseThrow(() ->
-                new RuntimeException("There is not any category in db by id %d"
+                new EntityNotFoundException("There is not any category in db by id %d"
                         .formatted(id))));
     }
 
@@ -41,13 +41,12 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public CategoryDto update(Long id, CreateCategoryRequestDto categoryRequestDto) {
-        if (!categoryRepository.existsById(id)) {
-            throw new EntityNotFoundException("There is not any category in db by id %d"
-                    .formatted(id));
-        }
-        Category updatedCategory = (categoryMapper.toCategory(categoryRequestDto));
-        updatedCategory.setId(id);
-        return categoryMapper.toDto(categoryRepository.save(updatedCategory));
+        Category existedCategory = categoryRepository.findById(id)
+                .orElseThrow(() ->
+                        new EntityNotFoundException("There is not category in db by id %d"
+                        .formatted(id)));
+        categoryMapper.updateCategory(categoryRequestDto, existedCategory);
+        return categoryMapper.toDto(categoryRepository.save(existedCategory));
     }
 
     @Override
